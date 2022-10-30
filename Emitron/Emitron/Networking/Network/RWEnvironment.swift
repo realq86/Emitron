@@ -35,5 +35,5 @@ struct RWEnvironment {
 }
 
 extension RWEnvironment {
-  static let prod = RWEnvironment(baseUrl: URL(string: "https://api.raywenderlich.com/api")!)
+  static let prod = RWEnvironment(baseUrl: URL(string: "https://api.kodeco.com/api")!)
 }
