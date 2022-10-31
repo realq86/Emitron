@@ -75,20 +75,25 @@ struct Provider: TimelineProvider {
 
 @main
 struct EmitronWidget: Widget {
-    let kind: String = "EmitronWidget"
+  private let kind: String = "EmitronWidget"
 
-    var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            EmitronWidgetEntryView(entry: entry)
-        }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+  public var body: some WidgetConfiguration {
+    StaticConfiguration(
+      kind: kind,
+      provider: Provider()
+    ) { entry in
+      EntryView(model: entry)
     }
+    .configurationDisplayName("RW Tutorials")
+    .description("See the latest video tutorials.")
+    .supportedFamilies([.systemMedium])
+  }
+
 }
 
-struct EmitronWidget_Previews: PreviewProvider {
-    static var previews: some View {
-        EmitronWidgetEntryView(entry: WidgetContent(date: Date()))
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
-    }
-}
+//struct EmitronWidget_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EmitronWidgetEntryView(entry: WidgetContent(date: Date()))
+//            .previewContext(WidgetPreviewContext(family: .systemSmall))
+//    }
+//}
