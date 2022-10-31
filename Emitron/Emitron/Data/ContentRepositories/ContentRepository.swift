@@ -25,7 +25,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
+import Foundation
 import Combine
 
 class ContentRepository: ObservableObject, ContentPaginatable {
@@ -44,7 +44,31 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     willSet {
       objectWillChange.send()
     }
+    didSet {
+      writeContents()
+    }
   }
+  
+  func writeContents() {
+    let widgetContents = contents.map {
+      WidgetContent(name: $0.name, cardViewSubtitle: $0.cardViewSubtitle,
+      descriptionPlainText: $0.descriptionPlainText,
+      releasedAtDateTimeString: $0.releasedAtDateTimeString)
+    }
+    let archiveURL = FileManager.sharedContainerURL()
+      .appendingPathComponent("contents.json")
+    print(">>> \(archiveURL)")
+    let encoder = JSONEncoder()
+    if let dataToSave = try? encoder.encode(widgetContents) {
+      do {
+        try dataToSave.write(to: archiveURL)
+      } catch {
+        print("Error: Can't write contents")
+        return
+      }
+    }
+  }
+
 
   // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
   // Let's see if we actually need it to be @Published...
@@ -203,5 +227,13 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       repository: repository,
       service: contentsService
     )
+  }
+}
+
+extension FileManager {
+  static func sharedContainerURL() -> URL {
+    return FileManager.default.containerURL(
+      forSecurityApplicationGroupIdentifier: "group.detour.emitron.contents"
+    )!
   }
 }

@@ -29,7 +29,7 @@
 import Foundation
 import WidgetKit
 
-struct WidgetContent: TimelineEntry {
+struct WidgetContent: TimelineEntry, Codable {
   var date = Date()
   let name: String
   let cardViewSubtitle: String
